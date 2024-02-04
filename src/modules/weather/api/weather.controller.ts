@@ -1,4 +1,4 @@
-import {Body, Controller, Get, HttpService, Post} from '@nestjs/common';
+import {Body, Controller, Get, Post} from '@nestjs/common';
 import {FetchWeatherUseCase} from "../application/useCases/fetchWeatherUseCase";
 import {StoreWeatherUseCase} from "../application/useCases/storeWeatherUseCase";
 import {GetWeatherUseCase} from "../application/useCases/getWeatherUseCase";
@@ -6,7 +6,6 @@ import {GetWeatherUseCase} from "../application/useCases/getWeatherUseCase";
 @Controller('weather')
 export class WeatherController {
     constructor(
-        private readonly httpService: HttpService,
         private readonly fetchWeatherUseCase: FetchWeatherUseCase,
         private readonly storeWeatherUseCase: StoreWeatherUseCase,
         private readonly getWeatherUseCase: GetWeatherUseCase,
