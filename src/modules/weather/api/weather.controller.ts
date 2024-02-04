@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Post, UseInterceptors} from '@nestjs/common';
+import {Body, Controller, Get, HttpException, HttpStatus, Post, UseInterceptors} from '@nestjs/common';
 import {FetchWeatherUseCase} from "../application/useCases/fetchWeatherUseCase";
 import {StoreWeatherUseCase} from "../application/useCases/storeWeatherUseCase";
 import {GetWeatherUseCase} from "../application/useCases/getWeatherUseCase";
@@ -16,8 +16,17 @@ export class WeatherController {
 
     @Post('/fetch')
     async fetchWeather(@Body() weatherRequestDto: WeatherRequestDto): Promise<void> {
-        const weatherData = await this.fetchWeatherUseCase.execute(weatherRequestDto);
-        await this.storeWeatherUseCase.execute(weatherData);
+        try {
+            const weatherData = await this.fetchWeatherUseCase.execute(weatherRequestDto);
+            await this.storeWeatherUseCase.execute(weatherData);
+        } catch (error) {
+            if (error.response && error.response.status === 400) {
+                throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+            } else {
+                throw new HttpException('Internal Server Error', HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+
     }
 
     @UseInterceptors(WeatherResponseInterceptor)

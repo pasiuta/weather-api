@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable, NotFoundException} from '@nestjs/common';
 import {WeatherDataDto} from "../application/dto/WeatherDataDto";
 import {DatabaseService} from "../../../database/database.service";
 import {IWeatherResponse} from "../application/types/IWeatherResponse";
@@ -37,6 +37,9 @@ export class WeatherService {
     `;
         const values = [lat, lon];
         const result = await this.databaseService.pool.query(query, values);
+        if (result.rows.length === 0) {
+            throw new NotFoundException(`Weather data not found for coordinates: ${lat}, ${lon}`);
+        }
         return result.rows[0];
     }
 }
