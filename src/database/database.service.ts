@@ -3,7 +3,7 @@ import { Pool } from 'pg';
 
 @Injectable()
 export class DatabaseService {
-    private pool: Pool;
+    pool: Pool;
 
     constructor() {
         this.pool = new Pool({
