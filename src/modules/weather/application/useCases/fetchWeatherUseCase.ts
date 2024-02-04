@@ -1,15 +1,18 @@
 import {Injectable} from '@nestjs/common';
 import {HttpService} from '@nestjs/axios';
 import {IWeatherResponse} from "../types/IWeatherResponse";
+import {WeatherRequestDto} from "../dto/WeatherRequestDto";
+import {lastValueFrom} from "rxjs";
 
 @Injectable()
 export class FetchWeatherUseCase {
     constructor(private httpService: HttpService) {}
 
-    async execute(lat: number, lon: number, part?: string): Promise<IWeatherResponse> {
+    async execute(weatherRequestDto: WeatherRequestDto): Promise<IWeatherResponse> {
         const apiKey = process.env.OPENWEATHERMAP_API_KEY;
+        const { lat, lon, part } = weatherRequestDto;
         const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=${part}&appid=${apiKey}`;
-        const response = await this.httpService.get(url).toPromise();
+        const response = await lastValueFrom(this.httpService.get(url));
         const data = response.data;
 
         return {

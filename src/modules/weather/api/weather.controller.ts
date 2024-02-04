@@ -16,7 +16,7 @@ export class WeatherController {
 
     @Post('/fetch')
     async fetchWeather(@Body() weatherRequestDto: WeatherRequestDto): Promise<void> {
-        const weatherData = await this.fetchWeatherUseCase.execute(weatherRequestDto.lat, weatherRequestDto.lon, weatherRequestDto.part);
+        const weatherData = await this.fetchWeatherUseCase.execute(weatherRequestDto);
         await this.storeWeatherUseCase.execute(weatherData);
     }
 
