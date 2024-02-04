@@ -1,73 +1,74 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Weather API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## What is it?
+-----------
+This API allows you to fetch weather data for a specific latitude and longitude, store it in the database, and retrieve it. You can also store and retrieve weather data manually.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Prerequisites
+-------------
+1. Install npm with command: `npm install -g npm`
+2. Navigate to this project locally and run: `npm install`
+3. Install Node.js: [https://nodejs.org/uk/download/](https://nodejs.org/uk/download/)
+4. Install Docker for container management: [https://docs.docker.com/get-docker/](https://docs.docker.com/get-docker/)
+5. Install Postman for testing your requests: [https://www.postman.com/downloads/](https://www.postman.com/downloads/)
+5. Generate api key here : [https://home.openweathermap.org/api_keys)
+6. Pass this already generated api key in .env file to OPENWEATHERMAP_API_KEY variable
+## How to use it?
+-------------
+### 1 Section: Work with Docker:
+-----------------------------
 
-## Description
+1) To start the application and database containers, write the following command in the terminal:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+```docker-compose up --build```
 
-## Installation
+This command will start the PostgreSQL database container and the application container as defined in the `docker-compose.yml`.
 
-```bash
-$ npm install
+2) The database will be initialized with the required `weather_data` table automatically.
+
+### 2 Section: Work with app:
+------------------------
+
+1) Navigate to Postman.
+
+2) For fetching weather data and storing it in the database, create a POST request to this URL: `http://localhost:3000/weather/fetch` with JSON body like:
+```json
+{
+  "lat": "43.44",
+  "lon": "-14.04",
+  "part": "minutely,hourly"
+}
 ```
 
-## Running the app
+To retrieve weather data from the database, create a GET request to this URL: `http://localhost:3000/weather` with the same JSON body format as above.
 
-```bash
-# development
-$ npm run start
+For directly checking the database, you can connect to the PostgreSQL container using:
 
-# watch mode
-$ npm run start:dev
+```docker exec -it postgres-db psql -U postgres -d weather_db```
 
-# production mode
-$ npm run start:prod
-```
+Then, you can execute SQL commands, for example, to see all entries in weather_data:
 
-## Test
+```SELECT * FROM weather_data;```
 
-```bash
-# unit tests
-$ npm run test
+## Handling Errors
+-----------------
 
-# e2e tests
-$ npm run test:e2e
+### 400 Bad Request
+- This error occurs if the request to the API is not correctly formed or missing required parameters. For instance, if the latitude or longitude values are out of valid range or missing in the request to fetch weather data, the API will respond with a 400 status code.
+- Example: If you send a request with an invalid `lat` or `lon` value, you will receive a response:
+  ```json
+  {
+    "statusCode": 400,
+    "message": "Bad Request"
+  }
 
-# test coverage
-$ npm run test:cov
-```
+### 404 Not Found
+This error is returned when a requested resource is not found. For the Weather API, this could occur if you try to retrieve weather data for a set of coordinates that do not exist in the database.
 
-## Support
+Example: If you make a GET request to retrieve weather data for a specific latitude and longitude that hasn't been fetched and stored in the database, the response will be:
+```json
+{
+"statusCode": 404,
+"message": "Weather data not found for the provided location"
+}
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
