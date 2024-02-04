@@ -1,7 +1,8 @@
-import {Body, Controller, Get, Post} from '@nestjs/common';
+import {Body, Controller, Get, Post, UseInterceptors} from '@nestjs/common';
 import {FetchWeatherUseCase} from "../application/useCases/fetchWeatherUseCase";
 import {StoreWeatherUseCase} from "../application/useCases/storeWeatherUseCase";
 import {GetWeatherUseCase} from "../application/useCases/getWeatherUseCase";
+import {WeatherResponseInterceptor} from "../../../interceptors/weather-response.interceptor";
 
 @Controller('weather')
 export class WeatherController {
@@ -12,14 +13,14 @@ export class WeatherController {
     ) {}
 
     @Post('/fetch')
-    async fetchAndStoreWeather(@Body() body: { lat: number; lon: number; part?: string }) {
+    async fetchWeather(@Body() body: { lat: number; lon: number; part?: string }):Promise<void> {
         const weatherData = await this.fetchWeatherUseCase.execute(body.lat, body.lon, body.part);
 
         await this.storeWeatherUseCase.execute(weatherData);
 
-        return { message: 'Weather data fetched from API and stored successfully.' };
     }
 
+    @UseInterceptors(WeatherResponseInterceptor)
     @Get()
     async getWeather(@Body() body: { lat: number; lon: number }) {
         return await this.getWeatherUseCase.execute(body.lat, body.lon);
