@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import {WeatherService} from "../../infrastracture/weather.service";
-import {WeatherDataDto} from "../dto/WeatherDataDto";
+import {IWeatherResponse} from "../types/IWeatherResponse";
 
 @Injectable()
 export class StoreWeatherUseCase {
     constructor(private weatherService: WeatherService) {}
 
-    async execute(weatherData: WeatherDataDto): Promise<void> {
+    async execute(weatherData: IWeatherResponse): Promise<void> {
         await this.weatherService.saveWeatherData(weatherData);
     }
 }

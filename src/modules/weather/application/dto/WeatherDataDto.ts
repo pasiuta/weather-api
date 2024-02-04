@@ -9,33 +9,33 @@ export class WeatherDataDto {
 
     @IsNumber()
     @IsOptional()
-    temp: number;
+    temp?: number;
 
     @IsNumber()
     @IsOptional()
-    feels_like: number;
+    feels_like?: number;
 
     @IsNumber()
     @IsOptional()
-    pressure: number;
+    pressure?: number;
 
     @IsNumber()
     @IsOptional()
-    humidity: number;
+    humidity?: number;
 
     @IsNumber()
     @IsOptional()
-    uvi: number;
+    uvi?: number;
 
     @IsNumber()
     @IsOptional()
-    wind_speed: number;
+    wind_speed?: number;
 
     @IsNumber()
     @IsOptional()
-    sunrise: number;
+    sunrise?: number;
 
     @IsNumber()
     @IsOptional()
-    sunset: number;
+    sunset?: number;
 }

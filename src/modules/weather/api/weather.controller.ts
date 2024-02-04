@@ -3,6 +3,8 @@ import {FetchWeatherUseCase} from "../application/useCases/fetchWeatherUseCase";
 import {StoreWeatherUseCase} from "../application/useCases/storeWeatherUseCase";
 import {GetWeatherUseCase} from "../application/useCases/getWeatherUseCase";
 import {WeatherResponseInterceptor} from "../../../interceptors/weather-response.interceptor";
+import {WeatherRequestDto} from "../application/dto/WeatherRequestDto";
+import {IWeatherResponse} from "../application/types/IWeatherResponse";
 
 @Controller('weather')
 export class WeatherController {
@@ -13,16 +15,14 @@ export class WeatherController {
     ) {}
 
     @Post('/fetch')
-    async fetchWeather(@Body() body: { lat: number; lon: number; part?: string }):Promise<void> {
-        const weatherData = await this.fetchWeatherUseCase.execute(body.lat, body.lon, body.part);
-
+    async fetchWeather(@Body() weatherRequestDto: WeatherRequestDto): Promise<void> {
+        const weatherData = await this.fetchWeatherUseCase.execute(weatherRequestDto.lat, weatherRequestDto.lon, weatherRequestDto.part);
         await this.storeWeatherUseCase.execute(weatherData);
-
     }
 
     @UseInterceptors(WeatherResponseInterceptor)
     @Get()
-    async getWeather(@Body() body: { lat: number; lon: number }) {
-        return await this.getWeatherUseCase.execute(body.lat, body.lon);
+    async getWeather(@Body() weatherRequestDto: WeatherRequestDto):Promise<IWeatherResponse> {
+        return this.getWeatherUseCase.execute(weatherRequestDto.lat, weatherRequestDto.lon);
     }
 }

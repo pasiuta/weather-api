@@ -1,4 +1,4 @@
-export interface IWeatherData {
+export interface IWeatherResponse{
     lat: number;
     lon: number;
     temp?: number;
