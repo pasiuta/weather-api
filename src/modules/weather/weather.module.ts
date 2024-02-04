@@ -4,8 +4,8 @@ import { WeatherController } from './api/weather.controller';
 import { FetchWeatherUseCase } from './application/useCases/fetchWeatherUseCase';
 import { StoreWeatherUseCase } from './application/useCases/storeWeatherUseCase';
 import { GetWeatherUseCase } from './application/useCases/getWeatherUseCase';
-import {DatabaseService} from "../../database/database.service";
-import {WeatherService} from "./infrastracture/weather.service";
+import { DatabaseService } from "../../database/database.service";
+import { WeatherService } from "./infrastracture/weather.service";
 
 @Module({
     imports: [HttpModule],

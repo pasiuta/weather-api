@@ -1,7 +1,7 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
-import {WeatherDataDto} from "../application/dto/WeatherDataDto";
-import {DatabaseService} from "../../../database/database.service";
-import {IWeatherResponse} from "../application/types/IWeatherResponse";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { WeatherDataDto } from "../application/dto/WeatherDataDto";
+import { DatabaseService } from "../../../database/database.service";
+import { IWeatherResponse } from "../application/types/IWeatherResponse";
 
 @Injectable()
 export class WeatherService {
@@ -29,7 +29,7 @@ export class WeatherService {
         await this.databaseService.pool.query(query, values);
     }
 
-    async getWeatherData(lat: number, lon: number):Promise<IWeatherResponse> {
+    async getWeatherData(lat: number, lon: number): Promise<IWeatherResponse> {
         const query = `
       SELECT * FROM weather_data
       WHERE lat = $1 AND lon = $2

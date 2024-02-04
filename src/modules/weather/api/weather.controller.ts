@@ -1,10 +1,10 @@
-import {Body, Controller, Get, HttpException, HttpStatus, Post, UseInterceptors} from '@nestjs/common';
-import {FetchWeatherUseCase} from "../application/useCases/fetchWeatherUseCase";
-import {StoreWeatherUseCase} from "../application/useCases/storeWeatherUseCase";
-import {GetWeatherUseCase} from "../application/useCases/getWeatherUseCase";
-import {WeatherResponseInterceptor} from "../../../interceptors/weather-response.interceptor";
-import {WeatherRequestDto} from "../application/dto/WeatherRequestDto";
-import {IWeatherResponse} from "../application/types/IWeatherResponse";
+import { Body, Controller, Get, HttpException, HttpStatus, Post, UseInterceptors } from '@nestjs/common';
+import { FetchWeatherUseCase } from "../application/useCases/fetchWeatherUseCase";
+import { StoreWeatherUseCase } from "../application/useCases/storeWeatherUseCase";
+import { GetWeatherUseCase } from "../application/useCases/getWeatherUseCase";
+import { WeatherResponseInterceptor } from "../../../interceptors/weather-response.interceptor";
+import { WeatherRequestDto } from "../application/dto/WeatherRequestDto";
+import { IWeatherResponse } from "../application/types/IWeatherResponse";
 
 @Controller('weather')
 export class WeatherController {
@@ -15,7 +15,7 @@ export class WeatherController {
     ) {}
 
     @Post('/fetch')
-    async fetchWeather(@Body() weatherRequestDto: WeatherRequestDto): Promise<void> {
+    async fetchWeather( @Body() weatherRequestDto: WeatherRequestDto ): Promise<void> {
         try {
             const weatherData = await this.fetchWeatherUseCase.execute(weatherRequestDto);
             await this.storeWeatherUseCase.execute(weatherData);
@@ -29,9 +29,9 @@ export class WeatherController {
 
     }
 
-    @UseInterceptors(WeatherResponseInterceptor)
+    @UseInterceptors( WeatherResponseInterceptor )
     @Get()
-    async getWeather(@Body() weatherRequestDto: WeatherRequestDto):Promise<IWeatherResponse> {
+    async getWeather( @Body() weatherRequestDto: WeatherRequestDto ):Promise<IWeatherResponse> {
         return this.getWeatherUseCase.execute(weatherRequestDto.lat, weatherRequestDto.lon);
     }
 }

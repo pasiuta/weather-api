@@ -1,7 +1,7 @@
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import {IWeatherTransformedResponse} from "../modules/weather/application/types/IWeatherTransformedResponse";
+import { IWeatherTransformedResponse } from "../modules/weather/application/types/IWeatherTransformedResponse";
 
 @Injectable()
 export class WeatherResponseInterceptor implements NestInterceptor {
